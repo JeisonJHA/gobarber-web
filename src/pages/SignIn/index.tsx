@@ -8,7 +8,8 @@ import logo from '../../assets/logo.svg';
 
 import Button from '../../components/Button';
 import Input from '../../components/Input';
-import { useAuth } from '../../hooks/AuthContext';
+import { useAuth } from '../../hooks/auth';
+import { useToast } from '../../hooks/toast';
 
 import { Container, Background, Content } from './styles';
 import getValidationErros from '../../utils/getValidationErros';
@@ -21,6 +22,7 @@ interface SignInFormData {
 const SignIn: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
   const { signIn } = useAuth();
+  const { addToast } = useToast();
   const handleSubmit = useCallback(
     async (data: SignInFormData) => {
       try {
@@ -33,13 +35,20 @@ const SignIn: React.FC = () => {
         });
 
         await schema.validate(data, { abortEarly: false });
-        signIn({ email: data.email, password: data.password });
+        await signIn({ email: data.email, password: data.password });
       } catch (err) {
-        const validations = getValidationErros(err);
-        formRef.current?.setErrors(validations);
+        if (err instanceof Yup.ValidationError) {
+          const validations = getValidationErros(err);
+          formRef.current?.setErrors(validations);
+        }
+        addToast({
+          type: 'error',
+          title: 'Erro na autenticação',
+          description: 'Verifique os dados de credencial.',
+        });
       }
     },
-    [signIn]
+    [addToast, signIn]
   );
   return (
     <Container>
