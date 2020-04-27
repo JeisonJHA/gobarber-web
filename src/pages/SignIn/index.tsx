@@ -4,6 +4,7 @@ import * as Yup from 'yup';
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
 
+import { Link } from 'react-router-dom';
 import logo from '../../assets/logo.svg';
 
 import Button from '../../components/Button';
@@ -11,7 +12,7 @@ import Input from '../../components/Input';
 import { useAuth } from '../../hooks/auth';
 import { useToast } from '../../hooks/toast';
 
-import { Container, Background, Content } from './styles';
+import { Container, Background, Content, AnimationContainer } from './styles';
 import getValidationErros from '../../utils/getValidationErros';
 
 interface SignInFormData {
@@ -40,6 +41,7 @@ const SignIn: React.FC = () => {
         if (err instanceof Yup.ValidationError) {
           const validations = getValidationErros(err);
           formRef.current?.setErrors(validations);
+          return;
         }
         addToast({
           type: 'error',
@@ -53,23 +55,25 @@ const SignIn: React.FC = () => {
   return (
     <Container>
       <Content>
-        <img src={logo} alt="GoWeb" />
-        <Form ref={formRef} onSubmit={handleSubmit}>
-          <h1>Faça seu login</h1>
-          <Input name="email" icon={FiMail} placeholder="E-mail" />
-          <Input
-            name="password"
-            icon={FiLock}
-            type="password"
-            placeholder="Senha"
-          />
-          <Button type="submit">Login</Button>
-          <a href="forgot">Esqueci a senha</a>
-        </Form>
-        <a href="new">
-          <FiLogIn />
-          Criar conta
-        </a>
+        <AnimationContainer>
+          <img src={logo} alt="GoWeb" />
+          <Form ref={formRef} onSubmit={handleSubmit}>
+            <h1>Faça seu login</h1>
+            <Input name="email" icon={FiMail} placeholder="E-mail" />
+            <Input
+              name="password"
+              icon={FiLock}
+              type="password"
+              placeholder="Senha"
+            />
+            <Button type="submit">Login</Button>
+            <a href="forgot">Esqueci a senha</a>
+          </Form>
+          <Link to="/signup">
+            <FiLogIn />
+            Criar conta
+          </Link>
+        </AnimationContainer>
       </Content>
       <Background />
     </Container>
