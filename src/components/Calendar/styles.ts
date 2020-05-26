@@ -7,13 +7,10 @@ export const Container = styled.div`
   .DayPicker {
     background: #28262e;
     border-radius: 10px;
-    position: relative;
   }
 
   .DayPicker-Caption {
-    top: 0;
     height: 50px;
-    position: absolute;
     border-radius: 10px 10px 0 0;
     display: flex;
     align-items: center;
@@ -52,6 +49,10 @@ export const Container = styled.div`
     width: 100%;
   }
 
+  .DayPicker-Weekdays {
+    margin-top: 0em;
+  }
+
   .DayPicker-Weekday {
     width: 40px;
     height: 40px;
@@ -60,14 +61,11 @@ export const Container = styled.div`
     color: #666360 !important;
     background: transparent !important;
   }
-  .DayPicker-Weekdays {
-    margin-top: 2em;
-  }
 
   .DayPicker-Month {
     border-collapse: separate;
     border-spacing: 8px;
-    margin: 16px;
+    margin: 0 16px 16px 16px;
     display: flex;
     flex-direction: column;
     align-items: center;
