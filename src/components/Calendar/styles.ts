@@ -29,7 +29,7 @@ export const Container = styled.div`
       background: transparent;
       border: 0;
       color: #f4ede8;
-      margin-top: 19px;
+      margin-top: 16px;
       position: absolute;
 
       svg {
@@ -60,6 +60,10 @@ export const Container = styled.div`
     line-height: 21px;
     color: #666360 !important;
     background: transparent !important;
+  }
+
+  .DayPicker-Weekday--selected {
+    color: #ff9000 !important;
   }
 
   .DayPicker-Month {
@@ -96,8 +100,7 @@ export const Container = styled.div`
     background: transparent !important;
   }
 
-  .DayPicker-Day--selected,
-  .DayPicker-Weekday--selected {
+  .DayPicker-Day--selected {
     background: #ff9000 !important;
     border-radius: 10px;
     color: #232129 !important;
