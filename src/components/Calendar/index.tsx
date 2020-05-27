@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useState } from 'react';
+import React, { useCallback, useContext } from 'react';
 import DayPicker, {
   NavbarElementProps,
   WeekdayElementProps,
@@ -9,9 +9,9 @@ import { FiArrowLeft, FiArrowRight } from 'react-icons/fi';
 import 'react-day-picker/lib/style.css';
 
 import { Container } from './styles';
-import { SelectedDate } from '../../hooks/selectedDateContext';
+import { SelectedDate, SelectedMonth } from '../../hooks/selectedDateContext';
 
-const SelectedMonth = React.createContext(new Date());
+// const SelectedMonth = React.createContext(new Date());
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const Caption = (props: CaptionElementProps) => {
   const { classNames, date, localeUtils } = props;
@@ -22,7 +22,7 @@ const Caption = (props: CaptionElementProps) => {
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const Weekday = (props: WeekdayElementProps) => {
   const { selectedDate } = useContext(SelectedDate);
-  const month = useContext(SelectedMonth);
+  const { selectedMonth } = useContext(SelectedMonth);
   const { weekday, className, localeUtils, locale, weekdaysShort } = props;
   const showWeekday = useCallback(() => {
     if (!weekdaysShort) return '';
@@ -31,10 +31,10 @@ const Weekday = (props: WeekdayElementProps) => {
 
   const defineClassName = useCallback(() => {
     return weekday === selectedDate?.getDay() &&
-      selectedDate?.getMonth() === month.getMonth()
+      selectedDate?.getMonth() === selectedMonth?.getMonth()
       ? `${className} ${className}--selected`
       : className;
-  }, [className, month, selectedDate, weekday]);
+  }, [className, selectedMonth, selectedDate, weekday]);
 
   const weekdayName = localeUtils.formatWeekdayShort(weekday, locale);
   return (
@@ -85,13 +85,17 @@ const Navbar = (props: NavbarElementProps) => {
   );
 };
 
-const Calendar: React.FC = () => {
+interface CalendarProps {
+  disabledDays: Date[];
+}
+
+const Calendar: React.FC<CalendarProps> = ({ disabledDays }) => {
   const { selectedDate, setSelectedDate } = useContext(SelectedDate);
-  const [month, setMonth] = useState(new Date());
+  const { setSelectedMonth } = useContext(SelectedMonth);
 
   const handleDateChange = useCallback(
     (day: Date, modifiers: DayModifiers) => {
-      if (modifiers.available) {
+      if (modifiers.available && !modifiers.disabled) {
         if (!setSelectedDate) return;
         setSelectedDate(day);
       }
@@ -99,36 +103,42 @@ const Calendar: React.FC = () => {
     [setSelectedDate]
   );
 
+  const handleMonthChange = useCallback(
+    (month: Date) => {
+      if (!setSelectedMonth) return;
+      setSelectedMonth(month);
+    },
+    [setSelectedMonth]
+  );
+
   return (
     <Container>
-      <SelectedMonth.Provider value={month}>
-        <DayPicker
-          navbarElement={Navbar}
-          captionElement={Caption}
-          weekdayElement={Weekday}
-          weekdaysShort={['D', 'S', 'T', 'Q', 'Q', 'S', 'S']}
-          fromMonth={new Date()}
-          modifiers={{ available: { daysOfWeek: [1, 2, 3, 4, 5] } }}
-          disabledDays={[{ daysOfWeek: [0, 6] }]}
-          onDayClick={handleDateChange}
-          selectedDays={selectedDate}
-          onMonthChange={(date) => setMonth(date)}
-          months={[
-            'Janeiro',
-            'Fevereiro',
-            'Março',
-            'Abril',
-            'Maio',
-            'Junho',
-            'Julho',
-            'Agosto',
-            'Setembro',
-            'Outubro',
-            'Novembro',
-            'Dezembro',
-          ]}
-        />
-      </SelectedMonth.Provider>
+      <DayPicker
+        navbarElement={Navbar}
+        captionElement={Caption}
+        weekdayElement={Weekday}
+        weekdaysShort={['D', 'S', 'T', 'Q', 'Q', 'S', 'S']}
+        fromMonth={new Date()}
+        modifiers={{ available: { daysOfWeek: [1, 2, 3, 4, 5] } }}
+        disabledDays={[{ daysOfWeek: [0, 6] }, ...disabledDays]}
+        onDayClick={handleDateChange}
+        selectedDays={selectedDate}
+        onMonthChange={handleMonthChange}
+        months={[
+          'Janeiro',
+          'Fevereiro',
+          'Março',
+          'Abril',
+          'Maio',
+          'Junho',
+          'Julho',
+          'Agosto',
+          'Setembro',
+          'Outubro',
+          'Novembro',
+          'Dezembro',
+        ]}
+      />
     </Container>
   );
 };
