@@ -46,7 +46,7 @@ const SignUp: React.FC = () => {
         history.push('/');
         addToast({
           type: 'success',
-          title: 'Castro realizado.',
+          title: 'Cadastro realizado.',
         });
       } catch (err) {
         if (err instanceof Yup.ValidationError) {
