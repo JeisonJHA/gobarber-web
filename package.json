@@ -30,10 +30,11 @@
     "yup": "^0.28.4"
   },
   "scripts": {
-    "start": "NODE_ENV=development react-scripts start",
-    "build": "NODE_ENV=prodution react-scripts build",
-    "test": "NODE_ENV=development react-scripts test",
-    "test:coverage": "NODE_ENV=development react-scripts test --coverage --watchAll false",
+    "start": "react-scripts start",
+    "start:prod": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "test:coverage": "react-scripts test --coverage --watchAll false",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
