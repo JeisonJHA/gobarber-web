@@ -41,7 +41,7 @@ const SignUp: React.FC = () => {
         });
 
         await schema.validate(data, { abortEarly: false });
-        console.log(process.env.REACT_APP_API_URL);
+
         await api.post('users', data);
         history.push('/');
         addToast({
